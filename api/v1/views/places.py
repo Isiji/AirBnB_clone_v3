@@ -1,4 +1,4 @@
-#!/usr/bin/python4
+#!/usr/bin/python3
 """
 Create a view for place objects that handles all default RestFul API action
 """
@@ -10,7 +10,7 @@ from models.user import User
 from models import storage
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
-def get_places_by_cities(city_id)
+def get_places_by_cities(city_id):
     """ Retrieves the list of all Users objects """
 
     city = storage.get(City, city_id)
@@ -62,7 +62,7 @@ def create_place(city_id):
     if 'name' not in data:
         abort(400, 'Missing name')
 
-    user = storage.get(User, data[user_id])
+    user = storage.get(User, data['user'])
     if not user:
         return abort(404)
 
@@ -77,11 +77,14 @@ def create_place(city_id):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def update_place(place_id):
     """ Creates the list of the user object """
-    place = storage.get_json():
-        ignore_keys = ['id', 'user_id' 'city_id' 'created_at', 'updated_at']
-    for key, value in data.items():
+    place = storage.get_json()
+    if not place:
+        return abort(404)
+    ignore_keys = ['id', 'user_id' 'city_id' 'created_at', 'updated_at']
+
+    for key, value in request.get_json().items():
             if key not in ignore_keys:
-                setattr(user, key, value)
+                setattr(place, key, value)
                 place.save()
                 return jsonify(place.to_dict()), 200
             else:

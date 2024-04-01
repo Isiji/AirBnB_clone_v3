@@ -17,7 +17,7 @@ def get_all_users():
 def get_user(user_id):
     """ Retrieves the list of the user object """
 
-    users = storage.get(User, user_id)
+    user = storage.get(User, user_id)
     if user:
         return jsonify(user.to_dict())
     else:
@@ -28,7 +28,7 @@ def get_user(user_id):
 def delete_user(user_id):
     """ Deletes the list of the user object """
 
-    users = storage.get(User, user_id)
+    user = storage.get(User, user_id)
     if user:
         storage.delete(user)
         storage.save()
@@ -58,7 +58,8 @@ def create_user():
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 def update_user():
     """ Updates the list of the user object """
-    users = storage.get(User, user_id)
+    
+    user = storage.get(User, user_id)
     if user:
         if not request.get_json():
             return abort(404, 'Not a JSON')
@@ -66,7 +67,7 @@ def update_user():
             return abort(404, 'Not a JSON')
 
         ignore_keys = ['id', 'created_at', 'updated_at']
-        for key, value in data.items():
+        for key, value in request.get_json.items():
             if key not in ignore_keys:
                 setattr(user, key, value)
         user.save()
