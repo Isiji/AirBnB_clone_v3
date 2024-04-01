@@ -12,5 +12,6 @@ def close_storage(exception):
     storage.close()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-    threaded=True
+    HOST = getenv('HBNB_API_HOST', '0.0.0.0')
+    PORT = getenv('HBNB_API_PORT', 5000)
+    app.run(host=HOST, port=PORT, threaded=True)
