@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" Main file """
 from models import storage
 from api.v1.views import app_views
 from flask import Flask, jsonify
