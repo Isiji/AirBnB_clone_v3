@@ -113,3 +113,36 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """Test that get returns the object based on the class and id"""
+        storage = FileStorage()
+        new_dict = {}
+        for key, value in classes.items():
+            instance = value()
+            instance_key = instance.__class__.__name__ + "." + instance.id
+            new_dict[instance_key] = instance
+        save = FileStorage._FileStorage__objects
+        FileStorage._FileStorage__objects = new_dict
+        for key, value in classes.items():
+            instance = storage.get(value, instance.id)
+            self.assertEqual(instance, new_dict[value.__name__ + "." + instance.id])
+        FileStorage._FileStorage__objects = save
+
+    def test_count(self):
+        """Test that count returns the number of objects in storage"""
+        storage = FileStorage()
+        new_dict = {}
+        for key, value in classes.items():
+            instance = value()
+            instance_key = instance.__class__.__name__ + "." + instance.id
+            new_dict[instance_key] = instance
+        save = FileStorage._FileStorage__objects
+        FileStorage._FileStorage__objects = new_dict
+        self.assertEqual(storage.count(), len(new_dict))
+        FileStorage._FileStorage__objects = save
+        # Should return the total number of objects in storage when called without arguments
+    def test_return_total_number_of_objects(self):
+        storage = FileStorage()
+        assert storage.count() == len(storage.all())
