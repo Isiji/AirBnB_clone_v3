@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 """ State module for retrieving apis """
 from api.v1.views import app_views
+from flask import jsonify, abort, request
 from models import storage
 from models.state import State
-from flask import jsonify, abort, request
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_states():
     """Return all states"""
-    states = storage.all(State)
+    states = storage.all(State).values()
     return jsonify([state.to_dict() for state in states.values()])
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
